@@ -1,5 +1,6 @@
 package net.frozenblock.wild.mod;
 
+import net.frozenblock.wild.mod.entity.event.ModEntityTypes;
 import net.frozenblock.wild.mod.registry.MangroveWoods;
 import net.frozenblock.wild.mod.registry.RegisterBlocks;
 import net.minecraft.client.Minecraft;
@@ -51,6 +52,9 @@ public class WildMod
         MinecraftForge.EVENT_BUS.register(this);
 
         RegisterBlocks.registerAll();
+
+        var bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModEntityTypes.ENTITIES.register(bus);
     }
 
     private void WildModClient(final FMLCommonSetupEvent event)
@@ -80,6 +84,8 @@ public class WildMod
     public void onServerStarting(ServerStartingEvent event) {
 
     }
+
+
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
