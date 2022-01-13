@@ -2,7 +2,9 @@ package net.frozenblock.wild.mod.entity.client.event;
 
 
 import net.frozenblock.wild.mod.WildMod;
+import net.frozenblock.wild.mod.entity.client.renderer.FrogEntityRenderer;
 import net.frozenblock.wild.mod.entity.client.renderer.WardenEntityRenderer;
+import net.frozenblock.wild.mod.entity.client.renderer.model.FrogEntityModel;
 import net.frozenblock.wild.mod.entity.client.renderer.model.WardenEntityModel;
 import net.frozenblock.wild.mod.entity.event.ModEntityTypes;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,10 +23,13 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(WardenEntityModel.LAYER_LOCATION, WardenEntityModel::createBodyLayer);
+        event.registerLayerDefinition(FrogEntityModel.LAYER_LOCATION, FrogEntityModel::createBodyLayer);
     }
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntityTypes.WARDEN_ENTITY.get(), WardenEntityRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.FROG_ENTITY.get(), FrogEntityRenderer::new);
     }
  }
+
