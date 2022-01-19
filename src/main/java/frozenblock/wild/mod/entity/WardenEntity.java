@@ -113,6 +113,7 @@ public class WardenEntity extends HostileEntity implements IAnimatable
     public long leaveTime;
     protected int delay = 0;
     protected int distance;
+    private int dig;
 
     public int attackCooldown;
 
@@ -267,7 +268,7 @@ public class WardenEntity extends HostileEntity implements IAnimatable
         }
         super.tickMovement();
     }
-
+    public int getDig() { return this.dig; }
     private float getAttackDamage() {
         return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
     }
