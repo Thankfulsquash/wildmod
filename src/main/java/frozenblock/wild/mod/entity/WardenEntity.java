@@ -1,7 +1,6 @@
 package frozenblock.wild.mod.entity;
 
 
-import frozenblock.wild.mod.WildMod;
 import frozenblock.wild.mod.liukrastapi.*;
 import frozenblock.wild.mod.registry.RegisterAccurateSculk;
 import frozenblock.wild.mod.registry.RegisterSounds;
@@ -23,7 +22,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -33,6 +31,7 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.Vibration;
 import net.minecraft.world.World;
 import net.minecraft.world.event.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -49,11 +48,15 @@ import java.util.Optional;
 public class WardenEntity extends HostileEntity implements IAnimatable
 {
 //TODO: FIND A WAY TO USE world.sendEntityStatus((byte) #) without breaking either the digging or emerging functions...
-    private AnimationFactory factory = new AnimationFactory(this);
+    private final AnimationFactory factory = new AnimationFactory(this);
+    private final EntityType<? extends HostileEntity> type;
+    private final World worldIn;
 
     public WardenEntity(EntityType<? extends HostileEntity> type, World worldIn)
     {
         super(type, worldIn);
+        this.type = type;
+        this.worldIn = worldIn;
         this.ignoreCameraFrustum = true;
     }
 
@@ -130,8 +133,10 @@ public class WardenEntity extends HostileEntity implements IAnimatable
     public int sniffY;
     public int sniffZ;
 
-    public WardenEntity(EntityType<? extends HostileEntity> entityType, World world) {
+    public WardenEntity(EntityType<? extends HostileEntity> entityType, World world, EntityType<? extends HostileEntity> type, World worldIn) {
         super(entityType, world);
+        this.type = type;
+        this.worldIn = worldIn;
         this.stepHeight = 1.0F;
     }
 
