@@ -97,7 +97,6 @@ public class WildModClient implements ClientModInitializer {
 
 
         EntityRendererRegistry.register(RegisterEntities.WARDEN, WardenEntityRenderer::new);
-        EntityModelLayerRegistry.registerModelLayer(MODEL_WARDEN_LAYER, WardenEntityModel::getTexturedModelData);
 
         EntityRendererRegistry.register(RegisterEntities.FROG, FrogEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(MODEL_FROG_LAYER, FrogEntityModel::getTexturedModelData);
