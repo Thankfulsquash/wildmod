@@ -57,12 +57,6 @@ public class WardenEntity extends HostileEntity implements IAnimatable
         this.ignoreCameraFrustum = true;
     }
 
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event)
-    {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.idle", true));
-        return PlayState.CONTINUE;
-    }
-
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "controller", 0, this::animations));
@@ -74,16 +68,22 @@ public class WardenEntity extends HostileEntity implements IAnimatable
     }
 
     private <E extends IAnimatable> PlayState animations(@NotNull AnimationEvent<E> event) {
-        if (this.emergeTicksLeft>0 && !this.hasEmerged) {
+        /* if (this.emergeTicksLeft>0 && !this.hasEmerged) {
             System.out.println(this.emergeTicksLeft);
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.emerge", false));
             return PlayState.CONTINUE;
         } else if (this.getDig()>0) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.dig", false));
             return PlayState.CONTINUE;
-        } else if (this.getRoarTicksLeft1()>0) {
+        } else */
+        if (this.getRoarTicksLeft1()>0) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.roar", false));
-            return PlayState.CONTINUE;
+        }
+        if (!event.isMoving) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.idle", true));
+        }
+        if (event.isMoving) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.walk", true));
         }
         return PlayState.CONTINUE;
     }
