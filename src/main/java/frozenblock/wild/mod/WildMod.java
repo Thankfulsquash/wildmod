@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.world.GameRules;
+import software.bernie.geckolib3.GeckoLib;
 
 public class WildMod implements ModInitializer {
 
@@ -20,6 +21,7 @@ public class WildMod implements ModInitializer {
         RegisterSounds.RegisterSounds();
         RegisterStatusEffects.RegisterStatusEffects();
         RegisterWorldgen.RegisterWorldgen();
+        GeckoLib.initialize();
 
         RegisterAccurateSculk.RegisterAccurateSculk();
     }

@@ -29,6 +29,11 @@ public class WardenEntityModel extends EntityModel<WardenEntity> {
         this.left_leg = root.getChild("left_leg");
         this.right_leg = root.getChild("right_leg");
     }
+
+    public WardenEntityModel() {
+
+    }
+
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
