@@ -63,15 +63,28 @@ public class WardenEntity extends HostileEntity implements IAnimatable
     }
 
     @Override
-    public void registerControllers(AnimationData data)
-    {
-        data.addAnimationController(new AnimationController(this, "idle", 0, this::predicate));
+    public void registerControllers(AnimationData animationData) {
+        animationData.addAnimationController(new AnimationController<>(this, "controller", 0, this::animations));
     }
 
     @Override
-    public AnimationFactory getFactory()
-    {
+    public AnimationFactory getFactory() {
         return this.factory;
+    }
+
+    private <E extends IAnimatable> PlayState animations(@NotNull AnimationEvent<E> event) {
+        if (this.emergeTicksLeft>0 && !this.hasEmerged) {
+            System.out.println(this.emergeTicksLeft);
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.emerge", false));
+            return PlayState.CONTINUE;
+        } else if (this.getDig()>0) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.dig", false));
+            return PlayState.CONTINUE;
+        } else if (this.getRoarTicksLeft1()>0) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.roar", false));
+            return PlayState.CONTINUE;
+        }
+        return PlayState.CONTINUE;
     }
 
     private int attackTicksLeft1;
