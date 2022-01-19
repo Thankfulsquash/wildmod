@@ -48,6 +48,7 @@ import java.util.Optional;
 
 public class WardenEntity extends HostileEntity implements IAnimatable
 {
+//TODO: FIND A WAY TO USE world.sendEntityStatus((byte) #) without breaking either the digging or emerging functions...
     private AnimationFactory factory = new AnimationFactory(this);
 
     public WardenEntity(EntityType<? extends HostileEntity> type, World worldIn)
@@ -209,6 +210,7 @@ public class WardenEntity extends HostileEntity implements IAnimatable
             this.emergeTicksLeft=-1;
         }
         if(this.emergeTicksLeft > 0 && this.hasEmerged) {
+            this.dig=90;
             digParticles(this.world, this.getBlockPos(), this.emergeTicksLeft);
             this.setInvulnerable(true);
             this.setVelocity(0,0,0);
