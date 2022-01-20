@@ -24,6 +24,27 @@
 					]
 				},
 				{
+					"name": "arms",
+					"parent": "body",
+					"pivot": [0, 13, 0]
+				},
+				{
+					"name": "right_arm",
+					"parent": "arms",
+					"pivot": [-11, 30, 0],
+					"cubes": [
+						{"origin": [-17, 6, -4], "size": [8, 28, 8], "uv": [52, 0]}
+					]
+				},
+				{
+					"name": "left_arm",
+					"parent": "arms",
+					"pivot": [11, 30, 0],
+					"cubes": [
+						{"origin": [9, 6, -4], "size": [8, 28, 8], "uv": [84, 0]}
+					]
+				},
+				{
 					"name": "head",
 					"parent": "body",
 					"pivot": [0, 34, 0],
@@ -64,25 +85,11 @@
 					]
 				},
 				{
-					"name": "arms",
-					"parent": "rig",
-					"pivot": [0, 13, 0]
-				},
-				{
-					"name": "right_arm",
-					"parent": "arms",
-					"pivot": [-11, 30, 0],
-					"cubes": [
-						{"origin": [-17, 6, -4], "size": [8, 28, 8], "uv": [52, 0]}
-					]
-				},
-				{
-					"name": "left_arm",
-					"parent": "arms",
-					"pivot": [11, 30, 0],
-					"cubes": [
-						{"origin": [9, 6, -4], "size": [8, 28, 8], "uv": [84, 0]}
-					]
+					"name": "bone",
+					"pivot": [0, 0, 0],
+					"locators": {
+						"particle": [0, 0, 0]
+					}
 				}
 			]
 		}

@@ -74,10 +74,10 @@ public class WardenEntity extends HostileEntity implements IAnimatable
             System.out.println(this.emergeTicksLeft);
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.emerge", false));
             return PlayState.CONTINUE;
-        } else if (this.getDig()>0) {
+        } /* else if (this.getDig()>0) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.dig", false));
             return PlayState.CONTINUE;
-        } else
+        } */ else
         if (this.getRoarTicksLeft1()>0) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.roar", false));
         } else
