@@ -639,9 +639,7 @@
 						"vector": [1, 1, 1]
 					}
 				}
-			},
-			"sound_effects": {},
-			"particle_effects": {}
+			}
 		},
 		"animation.warden.idle": {
 			"loop": true,
@@ -1224,40 +1222,41 @@
 			"bones": {
 				"rig": {
 					"rotation": {
-						"vector": ["-math.cos((query.ground_speed * 500) * query.anim_time) * 5-2", 0, 0]
+						"vector": ["-math.cos(query.anim_time * query.ground_speed * 15) * 5-2", 0, 0]
 					}
 				},
 				"body": {
 					"rotation": {
-						"vector": ["-math.sin((query.ground_speed * 500) * query.anim_time) * 10", 0, "math.cos((query.ground_speed * 500) * query.anim_time) * 2-2"]
+						"vector": ["-math.sin(query.anim_time * query.ground_speed * 15 ) * 10", 0, "math.cos(query.anim_time * query.ground_speed(15)) * 2-2"]
 					}
 				},
 				"right_arm": {
 					"rotation": {
-						"vector": ["-math.cos((query.ground_speed * 500) * query.anim_time) * query.ground_speed * 25", 0, 0]
+						"vector": ["-math.cos(query.anim_time * query.ground_speed * 15) * 25", 0, 0]
 					}
 				},
 				"left_arm": {
 					"rotation": {
-						"vector": ["math.cos((query.ground_speed * 500) * query.anim_time) * query.ground_speed * 25", 0, 0]
+						"vector": ["math.cos(query.anim_time * query.ground_speed * 15) * 25", 0, 0]
 					}
 				},
 				"head": {
 					"rotation": {
-						"vector": ["math.cos((query.ground_speed * 500) * query.anim_time) * 10", 0, "math.sin((query.ground_speed * 500) * query.anim_time) * 5-2"]
+						"vector": ["math.cos(query.anim_time * query.ground_speed * 15) * 10", 0, "math.sin(query.anim_time * query.ground_speed(15)) * 5-2"]
 					}
 				},
 				"left_leg": {
 					"rotation": {
-						"vector": ["math.sin((query.ground_speed * 500) * query.anim_time) * query.ground_speed * 50", 0, 0]
+						"vector": ["math.sin(query.anim_time * query.ground_speed * 15)*15", 0, 0]
 					}
 				},
 				"right_leg": {
 					"rotation": {
-						"vector": ["-math.sin((query.ground_speed * 500) * query.anim_time - 15) * query.ground_speed * 50", 0, 0]
+						"vector": ["-math.sin(query.anim_time * query.ground_speed * 15)*15", 0, 0]
 					}
 				}
 			}
 		}
-	}
+	},
+	"geckolib_format_version": 2
 }
