@@ -1,6 +1,7 @@
 package frozenblock.wild.mod.entity;
 
 
+import frozenblock.wild.mod.WildMod;
 import frozenblock.wild.mod.liukrastapi.*;
 import frozenblock.wild.mod.registry.RegisterAccurateSculk;
 import frozenblock.wild.mod.registry.RegisterSounds;
@@ -22,6 +23,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -49,15 +51,12 @@ public class WardenEntity extends HostileEntity implements IAnimatable
 {
 //TODO: FIND A WAY TO USE world.sendEntityStatus((byte) #) without breaking either the digging or emerging functions...
     private final AnimationFactory factory = new AnimationFactory(this);
-    private final EntityType<? extends HostileEntity> type;
-    private final World worldIn;
 
     public WardenEntity(EntityType<? extends HostileEntity> type, World worldIn)
     {
         super(type, worldIn);
-        this.type = type;
-        this.worldIn = worldIn;
         this.ignoreCameraFrustum = true;
+        this.stepHeight = 1.0F;
     }
 
     @Override
@@ -82,10 +81,10 @@ public class WardenEntity extends HostileEntity implements IAnimatable
         if (this.getRoarTicksLeft1()>0) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.roar", false));
         } else
-        if (!event.isMoving) {
+        if (!event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.idle", true));
         } else
-        if (event.isMoving) {
+        if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.warden.walk", true));
         }
         return PlayState.CONTINUE;
@@ -133,12 +132,6 @@ public class WardenEntity extends HostileEntity implements IAnimatable
     public int sniffY;
     public int sniffZ;
 
-    public WardenEntity(EntityType<? extends HostileEntity> entityType, World world, EntityType<? extends HostileEntity> type, World worldIn) {
-        super(entityType, world);
-        this.type = type;
-        this.worldIn = worldIn;
-        this.stepHeight = 1.0F;
-    }
 
     public static DefaultAttributeContainer.Builder createWardenAttributes() {
 
