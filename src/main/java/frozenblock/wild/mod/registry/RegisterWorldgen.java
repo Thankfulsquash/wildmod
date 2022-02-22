@@ -2,6 +2,7 @@ package frozenblock.wild.mod.registry;
 
 import com.google.common.collect.ImmutableList;
 import frozenblock.wild.mod.WildMod;
+import frozenblock.wild.mod.fromAccurateSculk.SculkTags;
 import frozenblock.wild.mod.mixins.TreeDecoratorTypeInvoker;
 import frozenblock.wild.mod.worldgen.*;
 import net.minecraft.block.Blocks;
@@ -9,10 +10,17 @@ import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.sound.MusicType;
 import net.minecraft.sound.BiomeMoodSound;
 import net.minecraft.sound.MusicSound;
+import net.minecraft.structure.processor.ProtectedBlocksStructureProcessor;
+import net.minecraft.structure.processor.StructureProcessorList;
+import net.minecraft.structure.processor.StructureProcessorRule;
+import net.minecraft.structure.rule.AlwaysTrueRuleTest;
+import net.minecraft.structure.rule.RandomBlockMatchRuleTest;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.VerticalSurfaceType;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -42,7 +50,7 @@ public class RegisterWorldgen {
     public static final RegistryKey<Biome> MANGROVE_SWAMP = register("mangrove_swamp");
     public static final RegistryKey<Biome> DEEP_DARK = register("deep_dark");
 
-    private static final Feature<DefaultFeatureConfig> SCULK_CATASTROPHE_FEATURE = new LargeSculkPatchFeature(DefaultFeatureConfig.CODEC);
+    private static final Feature<DefaultFeatureConfig> SCULK_PATCH_LARGE_FEATURE = new LargeSculkPatchFeature(DefaultFeatureConfig.CODEC);
     private static final Feature<DefaultFeatureConfig> SCULK_PATCH_FEATURE = new SculkPatchFeature(DefaultFeatureConfig.CODEC);
     private static final Feature<DefaultFeatureConfig> RANDOM_SCULK_FEATURE = new RandomSculkFeature(DefaultFeatureConfig.CODEC);
     private static final Feature<DefaultFeatureConfig> RANDOM_VEINS_FEATURE = new RandomVeinsFeature(DefaultFeatureConfig.CODEC);
@@ -50,7 +58,7 @@ public class RegisterWorldgen {
     private static final Feature<DefaultFeatureConfig> RARE_ACTIVATOR_FEATURE = new RareActivatorFeature(DefaultFeatureConfig.CODEC);
 
     public static PlacedFeature TREES_MANGROVE;
-    public static PlacedFeature SCULK_CATASTROPHE_PLACED;
+    public static PlacedFeature SCULK_PATCH_LARGE_PLACED;
     public static PlacedFeature SCULK_PATCH_PLACED;
     public static PlacedFeature RANDOM_SCULK_PLACED;
     public static PlacedFeature RANDOM_VEINS_PLACED;
@@ -59,12 +67,16 @@ public class RegisterWorldgen {
 
     public static ConfiguredFeature<TreeFeatureConfig, ?> MANGROVE;
     public static ConfiguredFeature<TreeFeatureConfig, ?> BIRCH_NEW;
-    public static ConfiguredFeature<DefaultFeatureConfig, ?> SCULK_CATASTROPHE_CONFIGURED;
+    public static ConfiguredFeature<DefaultFeatureConfig, ?> SCULK_PATCH_LARGE_CONFIGURED;
     public static ConfiguredFeature<DefaultFeatureConfig, ?> SCULK_PATCH_CONFIGURED;
     public static ConfiguredFeature<DefaultFeatureConfig, ?> RANDOM_SCULK_CONFIGURED;
     public static ConfiguredFeature<DefaultFeatureConfig, ?> RANDOM_VEINS_CONFIGURED;
     public static ConfiguredFeature<DefaultFeatureConfig, ?> COMMON_ACTIVATOR_CONFIGURED;
     public static ConfiguredFeature<DefaultFeatureConfig, ?> RARE_ACTIVATOR_CONFIGURED;
+
+    public static StructureProcessorList ANCIENT_CITY_START_DEGRADATION;
+    public static StructureProcessorList ANCIENT_CITY_GENERIC_DEGRADATION;
+    public static StructureProcessorList ANCIENT_CITY_WALLS_DEGRADATION;
 
     public static final TreeDecoratorType<MangroveTreeDecorator> MANGROVE_TREE_DECORATOR = TreeDecoratorTypeInvoker.callRegister("rich_tree_decorator", MangroveTreeDecorator.CODEC);
 
@@ -83,7 +95,7 @@ public class RegisterWorldgen {
         DefaultBiomeFeatures.addDefaultVegetation(builder2);
         DefaultBiomeFeatures.addDefaultOres(builder2);
         builder2.feature(GenerationStep.Feature.VEGETAL_DECORATION, SCULK_PATCH_PLACED);
-        builder2.feature(GenerationStep.Feature.VEGETAL_DECORATION, SCULK_CATASTROPHE_PLACED);
+        builder2.feature(GenerationStep.Feature.VEGETAL_DECORATION, SCULK_PATCH_LARGE_PLACED);
         builder2.feature(GenerationStep.Feature.VEGETAL_DECORATION, RANDOM_SCULK_PLACED);
         builder2.feature(GenerationStep.Feature.VEGETAL_DECORATION, RANDOM_VEINS_PLACED);
         builder2.feature(GenerationStep.Feature.VEGETAL_DECORATION, COMMON_ACTIVATOR_PLACED);
@@ -168,7 +180,7 @@ public class RegisterWorldgen {
     }
 
     public static void RegisterWorldgen() {
-        Registry.register(Registry.FEATURE, new Identifier(WildMod.MOD_ID, "sculk_catastrophe_feature"), SCULK_CATASTROPHE_FEATURE);
+        Registry.register(Registry.FEATURE, new Identifier(WildMod.MOD_ID, "sculk_patch_large_feature"), SCULK_PATCH_LARGE_FEATURE);
         Registry.register(Registry.FEATURE, new Identifier(WildMod.MOD_ID, "sculk_patch_feature"), SCULK_PATCH_FEATURE);
         Registry.register(Registry.FEATURE, new Identifier(WildMod.MOD_ID, "random_sculk_feature"), RANDOM_SCULK_FEATURE);
         Registry.register(Registry.FEATURE, new Identifier(WildMod.MOD_ID, "random_veins_feature"), RANDOM_VEINS_FEATURE);
@@ -191,7 +203,7 @@ public class RegisterWorldgen {
                         new TwoLayersFeatureSize(1, 0, 2)).ignoreVines()
                         .build()));
 
-        SCULK_CATASTROPHE_CONFIGURED = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(WildMod.MOD_ID, "sculk_catastrophe"), SCULK_CATASTROPHE_FEATURE.configure(new DefaultFeatureConfig()));
+        SCULK_PATCH_LARGE_CONFIGURED = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(WildMod.MOD_ID, "sculk_patch_large"), SCULK_PATCH_LARGE_FEATURE.configure(new DefaultFeatureConfig()));
         SCULK_PATCH_CONFIGURED = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(WildMod.MOD_ID, "sculk_patch"), SCULK_PATCH_FEATURE.configure(new DefaultFeatureConfig()));
         RANDOM_SCULK_CONFIGURED = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(WildMod.MOD_ID, "random_sculk_patch"), RANDOM_SCULK_FEATURE.configure(new DefaultFeatureConfig()));
         RANDOM_VEINS_CONFIGURED = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(WildMod.MOD_ID, "random_veins_patch"), RANDOM_VEINS_FEATURE.configure(new DefaultFeatureConfig()));
@@ -200,12 +212,16 @@ public class RegisterWorldgen {
 
 
         TREES_MANGROVE = Registry.register(BuiltinRegistries.PLACED_FEATURE, new Identifier(WildMod.MOD_ID, "trees_mangrove"), MANGROVE.withPlacement(PlacedFeatures.createCountExtraModifier(8, 0.1f, 1), SquarePlacementModifier.of(), SurfaceWaterDepthFilterPlacementModifier.of(6), PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of(), BlockFilterPlacementModifier.of(BlockPredicate.wouldSurvive(MangroveWoods.MANGROVE_PROPAGULE.getDefaultState(), BlockPos.ORIGIN))));
-        SCULK_CATASTROPHE_PLACED = Registry.register(BuiltinRegistries.PLACED_FEATURE, new Identifier(WildMod.MOD_ID, "sculk_catastrophe"), SCULK_CATASTROPHE_CONFIGURED.withPlacement(PlacedFeatures.createCountExtraModifier(1, 0.1f, 3), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(0)), EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR, 12), BiomePlacementModifier.of()));
+        SCULK_PATCH_LARGE_PLACED = Registry.register(BuiltinRegistries.PLACED_FEATURE, new Identifier(WildMod.MOD_ID, "sculk_patch_large"), SCULK_PATCH_LARGE_CONFIGURED.withPlacement(PlacedFeatures.createCountExtraModifier(1, 0.1f, 3), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(0)), EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR, 12), BiomePlacementModifier.of()));
         SCULK_PATCH_PLACED = Registry.register(BuiltinRegistries.PLACED_FEATURE, new Identifier(WildMod.MOD_ID, "sculk_patch"), SCULK_PATCH_CONFIGURED.withPlacement(PlacedFeatures.createCountExtraModifier(20, 0.1f, 3), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(0)), EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR, 12), BiomePlacementModifier.of()));
         RANDOM_SCULK_PLACED = Registry.register(BuiltinRegistries.PLACED_FEATURE, new Identifier(WildMod.MOD_ID, "random_sculk_patch"), RANDOM_SCULK_CONFIGURED.withPlacement(PlacedFeatures.createCountExtraModifier(10, 0.1f, 3), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(0)), EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR, 12), BiomePlacementModifier.of()));
         RANDOM_VEINS_PLACED = Registry.register(BuiltinRegistries.PLACED_FEATURE, new Identifier(WildMod.MOD_ID, "random_veins_patch"), RANDOM_VEINS_CONFIGURED.withPlacement(PlacedFeatures.createCountExtraModifier(10, 0.1f, 3), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(0)), EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR, 12), BiomePlacementModifier.of()));
         COMMON_ACTIVATOR_PLACED = Registry.register(BuiltinRegistries.PLACED_FEATURE, new Identifier(WildMod.MOD_ID, "common_activators"), COMMON_ACTIVATOR_CONFIGURED.withPlacement(PlacedFeatures.createCountExtraModifier(70, 0.1f, 3), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(0)), EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR, 12), BiomePlacementModifier.of()));
         RARE_ACTIVATOR_PLACED = Registry.register(BuiltinRegistries.PLACED_FEATURE, new Identifier(WildMod.MOD_ID, "rare_activators"), RARE_ACTIVATOR_CONFIGURED.withPlacement(PlacedFeatures.createCountExtraModifier(23, 0.1f, 3), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(0)), EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR, 12), BiomePlacementModifier.of()));
+
+        ANCIENT_CITY_START_DEGRADATION = Registry.register("ancient_city_start_degradation", ImmutableList.of(new ReplaceInTagProcessor(SculkTags.ANCIENT_CITY_REPLACEABLES, 0.98F), new StructureProcessorRule(ImmutableList.of(new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.DEEPSLATE_BRICKS, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.CRACKED_DEEPSLATE_BRICKS.getDefaultState()), new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.DEEPSLATE_TILES, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.CRACKED_DEEPSLATE_TILES.getDefaultState()), new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.SOUL_LANTERN, 0.05F), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()))), new ProtectedBlocksStructureProcessor(BlockTags.FEATURES_CANNOT_REPLACE.getId())));
+        ANCIENT_CITY_GENERIC_DEGRADATION = Registry.register("ancient_city_generic_degradation", ImmutableList.of(new ReplaceInTagProcessor(SculkTags.ANCIENT_CITY_REPLACEABLES, 0.95F), new StructureProcessorRule(ImmutableList.of(new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.DEEPSLATE_BRICKS, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.CRACKED_DEEPSLATE_BRICKS.getDefaultState()), new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.DEEPSLATE_TILES, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.CRACKED_DEEPSLATE_TILES.getDefaultState()), new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.SOUL_LANTERN, 0.05F), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()))), new ProtectedBlocksStructureProcessor(BlockTags.FEATURES_CANNOT_REPLACE.getId())));
+        ANCIENT_CITY_WALLS_DEGRADATION = Registry.register("ancient_city_walls_degradation", ImmutableList.of(new ReplaceInTagProcessor(SculkTags.ANCIENT_CITY_REPLACEABLES, 0.95F), new StructureProcessorRule(ImmutableList.of(new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.DEEPSLATE_BRICKS, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.CRACKED_DEEPSLATE_BRICKS.getDefaultState()), new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.DEEPSLATE_TILES, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.CRACKED_DEEPSLATE_TILES.getDefaultState()), new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.DEEPSLATE_TILE_SLAB, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()), new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.SOUL_LANTERN, 0.05F), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()))), new ProtectedBlocksStructureProcessor(BlockTags.FEATURES_CANNOT_REPLACE.getId())));
 
         BuiltinRegistries.add(BuiltinRegistries.BIOME, MANGROVE_SWAMP, createMangroveSwamp());
         BuiltinRegistries.add(BuiltinRegistries.BIOME, DEEP_DARK, createDeepDark());
