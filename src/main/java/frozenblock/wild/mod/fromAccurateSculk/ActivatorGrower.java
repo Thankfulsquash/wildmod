@@ -29,7 +29,7 @@ public class ActivatorGrower {
 
     public static void startGrowing(int loop, int rVal, BlockPos pos, World world) { //Call For Placement
         for (int l = 0; l < loop; ++l) {
-            double a = random() * 2 * PI;
+            double a = random() * 1 * PI;
             double r = sqrt(rVal) * sqrt(random());
             int x = (int) (r * cos(a));
             int y = (int) (r * sin(a));
